@@ -11,7 +11,6 @@ package rc5;
  */
 public class RC5Key {
 
-    private final int biteSizeNumber = 32;
     private final int P=0xb7e15163;
     private final int Q=0x9e3779b9;
     private int w;
@@ -19,23 +18,5 @@ public class RC5Key {
     private int r;
     private int b;
     private int c;
-    /**
-     *
-     * @param number number
-     * @param n number to move
-     * @return result
-     */
-    private int rotateLeft(int number, int n) {
-        return (((number) << (n))) | ((number) >> (biteSizeNumber - (n)));
-    }
-
-    /**
-     *
-     * @param number number
-     * @param n number to move
-     * @return result
-     */
-    private int rotateRight(int number, int n) {
-        return (((number) >> (n))) | ((number) << (biteSizeNumber - (n)));
-    }
+   
 }
