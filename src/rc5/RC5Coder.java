@@ -10,8 +10,16 @@ package rc5;
  * @author moles
  */
 public class RC5Coder {
-
+    //const
     private final int biteSizeNumber = 64;
+    //to algorithm
+    private final int numberOfRound;
+    
+
+    public RC5Coder(int numberOfRound) {
+        this.numberOfRound = numberOfRound;
+    }
+    
 
     /**
      *
@@ -36,18 +44,18 @@ public class RC5Coder {
     /**
      *
      * @param data
-     * @return
+     * @return encrypted data
      */
-    public byte[] encryptPart(byte[] data) {
+    public byte[] encryptPart(byte[] data,int[] S) {
         return null;
     }
 
     /**
      *
      * @param data
-     * @return
+     * @return decrypted data
      */
-    public byte[] decryptPart(byte[] data) {
+    public byte[] decryptPart(byte[] data,int[] S) {
         return null;
     }
 
