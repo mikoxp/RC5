@@ -13,10 +13,11 @@ public class RC5Coder {
     
     //to algorithm
     private final int numberOfRounds;
-    
+    private final int numberOfWords;
 
     public RC5Coder(int numberOfRounds) {
         this.numberOfRounds = numberOfRounds;
+        numberOfWords=2*(numberOfRounds+1);
     }
     /**
      *
