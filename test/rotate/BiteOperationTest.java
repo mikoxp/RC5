@@ -5,10 +5,13 @@
  */
 package rotate;
 
+import exception.BiteOperationException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -61,5 +64,30 @@ public class BiteOperationTest {
             b = biteOperation.rotateRight(b, number);
         }
         Assert.assertEquals(a, b);
+    }
+    @Test(expected = BiteOperationException.class) 
+    public void complementToBlock_dataIsNull_Exception() throws BiteOperationException {
+        biteOperation.complementToBlock(5, null);
+    }
+    @Test
+    public void complementToBlock_complement_complemented(){
+        byte[] mark=new byte[4];
+        mark[2]=15;
+        mark[3]=7;
+        byte[] data=new byte[2];
+        data[0]=15;
+        data[1]=7;
+        try {
+            data=biteOperation.complementToBlock(4, data);
+        } catch (BiteOperationException ex) {
+            Logger.getLogger(BiteOperationTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Assert.assertArrayEquals(mark, data);
+    }
+    @Test(expected = BiteOperationException.class) 
+    public void complementToBlock_dataSizeIsBiggerThanSizeBlock_Exception() 
+            throws BiteOperationException{
+        byte[] data=new byte[10];
+        biteOperation.complementToBlock(5, data);
     }
 }
