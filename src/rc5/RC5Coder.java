@@ -25,8 +25,9 @@ public class RC5Coder {
         numberOfWords = 2 * (numberOfRounds + 1);
         biteOperation = new BiteOperation();
     }
+
     /**
-     * 
+     *
      * @param data data
      * @return parts
      */
@@ -42,25 +43,34 @@ public class RC5Coder {
         tmp[1] = new BigInteger(b).intValue();
         return tmp;
     }
-    /**
-     * 
-     * @param a first part
-     * @param b second part
-     * @return 
-     */
-    private byte[] assemblingParts(int a,int b){
-        byte[] tmp=new byte[2*sizeOfPart];
-        
-        return tmp;
-    }
+    
     /**
      *
-     * @param data
+     * @param a first part
+     * @param b second part
+     * @return
+     */
+    private byte[] assemblingParts(int a, int b) {
+        byte[] tmp = new byte[2 * sizeOfPart];
+        byte[] byteA=new BigInteger(""+a).toByteArray();
+        byte[] byteB = new BigInteger(""+b).toByteArray();
+        for(int i=0;i<sizeOfPart;i++){
+            tmp[i]=byteA[i];
+            tmp[sizeOfPart+i]=byteB[i];
+        }
+        return tmp;
+    }
+
+    /**
+     *
+     * @param data data
+     * @param key key
      * @return encrypted data
      */
-    public byte[] encryptPart(byte[] data, int[] S) {
+    public byte[] encryptPart(byte[] data, RC5Key key) {
         int A, B;
         int f;
+        int[] S=key.getWords();
         int[] tmp = divisionIntoParts(data);
         A = tmp[0];
         B = tmp[1];
@@ -76,11 +86,10 @@ public class RC5Coder {
             B = biteOperation.rotateLeft(B, f);
             B = B + S[2 * p + 1];
         }
-        
-       
+
         for (int p = numberOfRounds; p != 0; p--) {
             f = (int) A % 32;
-            B = B + S[2 * p + 1];
+            B = B - S[2 * p + 1];
             B = biteOperation.rotateRight(B, f);
             B = B ^ A;
             f = (int) B % 32;
@@ -90,7 +99,8 @@ public class RC5Coder {
         }
         A = A - S[0];
         B = B - S[1];
-        return null;
+        byte[] outputData = assemblingParts(A, B);
+        return outputData;
     }
 
     /**
@@ -98,7 +108,7 @@ public class RC5Coder {
      * @param data
      * @return decrypted data
      */
-    public byte[] decryptPart(byte[] data, int[] S) {
+    public byte[] decryptPart(byte[] data, RC5Key key) {
         return null;
     }
 
