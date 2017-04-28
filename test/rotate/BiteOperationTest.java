@@ -25,7 +25,7 @@ public class BiteOperationTest {
         BigInteger bigInteger = new BigInteger("abcd".getBytes());
         int a = bigInteger.intValue();
         int b = a;
-        int number = 3;
+        int number = 32;
         int n = 150;
         for (int i = 0; i < n; i++) {
             b = biteOperation.rotateLeft(b, number);

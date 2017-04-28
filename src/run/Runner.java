@@ -5,6 +5,7 @@
  */
 package run;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import rc5.RC5Coder;
 
@@ -20,8 +21,9 @@ public class Runner {
     public static void main(String[] args) {
         int r=5;
         int[] S=new int[2*r+2];
-        System.out.println(Arrays.toString(S));
+        String text="1234abcd";
         RC5Coder rC5Coder=new RC5Coder(r);
+        rC5Coder.encryptPart(text.getBytes(), S);
     }
     
 }
