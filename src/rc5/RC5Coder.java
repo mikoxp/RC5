@@ -12,11 +12,11 @@ package rc5;
 public class RC5Coder {
     
     //to algorithm
-    private final int numberOfRound;
+    private final int numberOfRounds;
     
 
-    public RC5Coder(int numberOfRound) {
-        this.numberOfRound = numberOfRound;
+    public RC5Coder(int numberOfRounds) {
+        this.numberOfRounds = numberOfRounds;
     }
     /**
      *
