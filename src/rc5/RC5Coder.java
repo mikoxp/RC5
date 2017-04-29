@@ -18,7 +18,7 @@ public class RC5Coder {
     private final int numberOfRounds;
     private final int numberOfWords;
     private final int sizeOfPart = 4;
-    private BiteOperation biteOperation;
+    private final BiteOperation biteOperation;
 
     public RC5Coder(int numberOfRounds) {
         this.numberOfRounds = numberOfRounds;
@@ -48,7 +48,7 @@ public class RC5Coder {
      *
      * @param a first part
      * @param b second part
-     * @return
+     * @return assembling byte data
      */
     private byte[] assemblingParts(int a, int b) {
         byte[] tmp = new byte[2 * sizeOfPart];
@@ -68,48 +68,61 @@ public class RC5Coder {
      * @return encrypted data
      */
     public byte[] encryptPart(byte[] data, RC5Key key) {
-        int A, B;
-        int f;
-        int[] S=key.getWords();
-        int[] tmp = divisionIntoParts(data);
-        A = tmp[0];
-        B = tmp[1];
-        A = A + S[0];
-        B = B + S[1];
-        for (int p = 1; p <= numberOfRounds; p++) {
-            A = A ^ B;
-            f = (int) B % 32;
-            A = biteOperation.rotateLeft(A, f);
-            A = A + S[2 * p];
-            B = B ^ A;
-            f = (int) A % 32;
-            B = biteOperation.rotateLeft(B, f);
-            B = B + S[2 * p + 1];
+        int a;
+        int b;
+        int number;
+        int[] s=key.getWords();
+        int[] parts = divisionIntoParts(data);
+        a = parts[0];
+        b = parts[1];
+        /*_____________________________________*/
+        a = a + s[0];
+        b = b + s[1];
+        for (int i = 1; i <= numberOfRounds; i++) {
+            a = a ^ b;
+            number = (int) b % 32;
+            a = biteOperation.rotateLeft(a, number);
+            a = a + s[2 * i];
+            b = b ^ a;
+            number = (int) a % 32;
+            b = biteOperation.rotateLeft(b, number);
+            b = b + s[2 * i + 1];
         }
-
-        for (int p = numberOfRounds; p != 0; p--) {
-            f = (int) A % 32;
-            B = B - S[2 * p + 1];
-            B = biteOperation.rotateRight(B, f);
-            B = B ^ A;
-            f = (int) B % 32;
-            A = A - S[2 * p];
-            A = biteOperation.rotateRight(A, f);
-            A = A ^ B;
-        }
-        A = A - S[0];
-        B = B - S[1];
-        byte[] outputData = assemblingParts(A, B);
+        /*_____________________________________*/
+        byte[] outputData = assemblingParts(a, b);
         return outputData;
     }
 
     /**
      *
-     * @param data
+     * @param data data
+     * @param key key
      * @return decrypted data
      */
     public byte[] decryptPart(byte[] data, RC5Key key) {
-        return null;
+        int a;
+        int b;
+        int number;
+        int[] s=key.getWords();
+        int[] parts = divisionIntoParts(data);
+        a = parts[0];
+        b = parts[1];
+        /*_____________________________________*/
+        for (int i = numberOfRounds; i != 0; i--) {
+            number = (int) a % 32;
+            b = b - s[2 * i + 1];
+            b = biteOperation.rotateRight(b, number);
+            b = b ^ a;
+            number = (int) b % 32;
+            a = a - s[2 * i];
+            a = biteOperation.rotateRight(a, number);
+            a = a ^ b;
+        }
+        a = a - s[0];
+        b = b - s[1];
+        /*_____________________________________*/
+        byte[] outputData = assemblingParts(a, b);
+        return outputData;
     }
 
 }
