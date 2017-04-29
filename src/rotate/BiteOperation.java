@@ -37,6 +37,7 @@ public class BiteOperation {
      * @param sizeOfBlock size of block
      * @param data data
      * @return complement data
+     * @throws exception.BiteOperationException bite exception
      */
     public byte[] complementToBlock(int sizeOfBlock,byte[] data) 
             throws BiteOperationException{

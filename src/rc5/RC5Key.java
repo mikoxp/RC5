@@ -5,7 +5,6 @@
  */
 package rc5;
 
-import java.util.Arrays;
 import rotate.BiteOperation;
 
 /**
