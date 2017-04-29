@@ -21,7 +21,7 @@ import org.junit.Test;
  */
 public class BiteOperationTest {
 
-    private BiteOperation biteOperation = new BiteOperation();
+    private final BiteOperation biteOperation = new BiteOperation();
 
     @Test
     public void reversibilityOfRotation_sameNumber_reversibility() {
