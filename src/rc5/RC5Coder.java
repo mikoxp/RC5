@@ -5,7 +5,10 @@
  */
 package rc5;
 
+import exception.BiteOperationException;
 import java.math.BigInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import rotate.BiteOperation;
 
 /**
@@ -16,13 +19,11 @@ public class RC5Coder {
 
     //to algorithm
     private final int numberOfRounds;
-    private final int numberOfWords;
     private final int sizeOfPart = 4;
     private final BiteOperation biteOperation;
 
     public RC5Coder(int numberOfRounds) {
         this.numberOfRounds = numberOfRounds;
-        numberOfWords = 2 * (numberOfRounds + 1);
         biteOperation = new BiteOperation();
     }
 
@@ -33,30 +34,72 @@ public class RC5Coder {
      */
     private int[] divisionIntoParts(byte[] data) {
         int[] tmp = new int[2];
+        int n=data.length;
+        int nB=n/2;
+        int nA=n-nB;
+        int j;
         byte[] a = new byte[sizeOfPart];
         byte[] b = new byte[sizeOfPart];
-        for (int i = 0; i < sizeOfPart; i++) {
-            a[i] = data[i];
-            b[i] = data[sizeOfPart + i];
+        n--;
+        j=sizeOfPart-1;
+        for(int i=0;i<nB;i++){
+            b[j]=data[n];
+            n--;
+            j--;
+        }
+        j=sizeOfPart-1;
+        for(int i=nA-1;i>=0;i--){
+            a[j]=data[n];
+            n--;
+            j--;
         }
         tmp[0] = new BigInteger(a).intValue();
         tmp[1] = new BigInteger(b).intValue();
         return tmp;
     }
-    
+
     /**
      *
      * @param a first part
      * @param b second part
      * @return assembling byte data
      */
-    private byte[] assemblingParts(int a, int b) {
+    private byte[] assemblingPartsWithComplement(int a, int b) {
         byte[] tmp = new byte[2 * sizeOfPart];
-        byte[] byteA=new BigInteger(""+a).toByteArray();
-        byte[] byteB = new BigInteger(""+b).toByteArray();
-        for(int i=0;i<sizeOfPart;i++){
-            tmp[i]=byteA[i];
-            tmp[sizeOfPart+i]=byteB[i];
+        byte[] byteA = new BigInteger("" + a).toByteArray();
+        byte[] byteB = new BigInteger("" + b).toByteArray();
+        if (byteA.length != sizeOfPart) {
+            try {
+                byteA = biteOperation.complementToBlock(sizeOfPart, byteA);
+            } catch (BiteOperationException ex) {
+                Logger.getLogger(RC5Coder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (byteB.length != sizeOfPart) {
+            try {
+                byteB = biteOperation.complementToBlock(sizeOfPart, byteB);
+            } catch (BiteOperationException ex) {
+                Logger.getLogger(RC5Coder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        for (int i = 0; i < sizeOfPart; i++) {
+            tmp[i] = byteA[i];
+            tmp[sizeOfPart + i] = byteB[i];
+        }
+        return tmp;
+    }
+
+    private byte[] assemblingParts(int a, int b) {
+        byte[] byteA = new BigInteger("" + a).toByteArray();
+        byte[] byteB = new BigInteger("" + b).toByteArray();
+        int nA = byteA.length;
+        int nB = byteB.length;
+        byte[] tmp = new byte[nA + nB];
+        for (int i = 0; i < nA; i++) {
+            tmp[i] = byteA[i];
+        }
+        for (int i = 0; i < nB; i++) {
+            tmp[nA + i] = byteB[i];
         }
         return tmp;
     }
@@ -71,7 +114,7 @@ public class RC5Coder {
         int a;
         int b;
         int number;
-        int[] s=key.getWords();
+        int[] s = key.getWords();
         int[] parts = divisionIntoParts(data);
         a = parts[0];
         b = parts[1];
@@ -89,7 +132,7 @@ public class RC5Coder {
             b = b + s[2 * i + 1];
         }
         /*_____________________________________*/
-        byte[] outputData = assemblingParts(a, b);
+        byte[] outputData = assemblingPartsWithComplement(a, b);
         return outputData;
     }
 
@@ -103,7 +146,7 @@ public class RC5Coder {
         int a;
         int b;
         int number;
-        int[] s=key.getWords();
+        int[] s = key.getWords();
         int[] parts = divisionIntoParts(data);
         a = parts[0];
         b = parts[1];
