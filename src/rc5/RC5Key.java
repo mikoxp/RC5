@@ -16,15 +16,14 @@ public class RC5Key {
 
     private final int P = 0xb7e15163;
     private final int Q = 0x9e3779b9;
-    private final int w = 32;// word in bits
-    private final int u = w / 8;// word in byte
-    private final int numberOfRounds;
+    private final int sizeOfWordInBits = 32;
+    private final int sizeOfWordInByte = sizeOfWordInBits / 8;
     private final int sizeKeyInByte;
     private final int numberOfWords;
     private final int c;
-    private final byte[] key;//key
+    private final byte[] key;
     private int[] words;
-    private BiteOperation biteOperation;
+    private final BiteOperation biteOperation;
 
     /**
      *
@@ -32,11 +31,10 @@ public class RC5Key {
      * @param key key byte
      */
     public RC5Key(int numberOfRounds, byte[] key) {
-        this.numberOfRounds = numberOfRounds;
         this.key = key;
         biteOperation = new BiteOperation();
         sizeKeyInByte = key.length;
-        c = sizeKeyInByte / u;
+        c = sizeKeyInByte / sizeOfWordInByte;
         numberOfWords = 2 * (numberOfRounds + 1);
         generateWords();
     }
@@ -47,15 +45,15 @@ public class RC5Key {
     private void generateWords() {
         int[] L = new int[numberOfWords];
         int n;
-        int tmp;
-        int A=0;
-        int B=0;
-        int ii=0;
-        int j=0;
+        int number;
+        int a=0;
+        int b=0;
+        int x=0;
+        int y=0;
         words = new int[numberOfWords];
         //------------------------------------
         for (int i = sizeKeyInByte - 1; i >= 0; i--) {
-            L[i / u] = (L[i / u] << 8) + key[i];
+            L[i / sizeOfWordInByte] = (L[i / sizeOfWordInByte] << 8) + key[i];
         }
         words[0] = P;
         for (int i = 1; i < numberOfWords; i++) {
@@ -66,14 +64,14 @@ public class RC5Key {
         } else {
             n = c;
         }
-        for(int k=0;k<3*n;k++){
-            words[ii]=biteOperation.rotateLeft(words[ii]+A+B, 3);
-            A=words[ii];
-            tmp=(A+B)%32;
-            L[j]=biteOperation.rotateLeft(L[j]+A+B, tmp);
-            B=L[j];
-            ii=(ii+1)%numberOfWords;
-            j=(j+1)%c; 
+        for(int i=0;i<3*n;i++){
+            words[x]=biteOperation.rotateLeft(words[x]+a+b, 3);
+            a=words[x];
+            number=(a+b)%32;
+            L[y]=biteOperation.rotateLeft(L[y]+a+b, number);
+            b=L[y];
+            x=(x+1)%numberOfWords;
+            y=(y+1)%c; 
         }       
     }
 
@@ -84,7 +82,10 @@ public class RC5Key {
     public byte[] getKey() {
         return key;
     }
-
+    /**
+     * 
+     * @return words
+     */
     public int[] getWords() {
         return words;
     }
