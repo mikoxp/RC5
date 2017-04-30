@@ -37,7 +37,29 @@ public class RC5Key {
         numberOfWords = 2 * (numberOfRounds + 1);
         generateWords();
     }
-
+    /**
+     * 
+     * @param numberOfRounds number of rounds
+     * @param sizeKeyInByte  size of key
+     */
+    public RC5Key(int numberOfRounds,int sizeKeyInByte){
+        biteOperation = new BiteOperation();
+        this.sizeKeyInByte=sizeKeyInByte;
+        c = sizeKeyInByte / sizeOfWordInByte;
+        numberOfWords = 2 * (numberOfRounds + 1);
+        key=generateKey();
+        generateWords();
+    }
+    /**
+     * 
+     * @return generate key
+     */
+    private byte[] generateKey(){
+        byte[] key = null;
+        BlumBlumShubKeyGenerator gen=new BlumBlumShubKeyGenerator();
+        key=gen.generate(sizeKeyInByte);
+        return key;
+    }
     /**
      * generate words
      */
