@@ -7,6 +7,9 @@ package rc5;
 
 import exception.BiteOperationException;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import rotate.BiteOperation;
@@ -155,12 +158,63 @@ public class RC5Coder {
     /**
      * 
      * @param data data
+     * @return list of blocks
+     */
+    private List<byte[]> divisionIntoBlocks(byte[] data){
+        int n=data.length;
+        if(n%sizeOfPartInByte!=0){
+            
+        }
+        int sizeOfBlock=2*sizeOfPartInByte;
+        int numbersOfBlocks=n/sizeOfBlock;
+        byte[] tmp;
+        int counter=0;
+        List<byte[]> parts=new ArrayList<>();
+        for(int i=0;i<numbersOfBlocks;i++){
+            tmp=new byte[sizeOfBlock];
+            for(int j=0;j<sizeOfBlock;j++){
+                tmp[j]=data[counter];
+                counter++;
+            }
+            parts.add(tmp);
+        }
+        return parts;
+    }
+    /**
+     * 
+     * @param blocks list of blocks
+     * @return data
+     */
+    private byte[] assemblyOfBlocks(List<byte[]> blocks){
+        int sizeOfBlock=2*sizeOfPartInByte;
+        int n=blocks.size()*sizeOfBlock;
+        byte[] outputData=new byte[n];
+        int counter=0;
+        for (byte[] block : blocks) {
+            for(int i=0;i<sizeOfBlock;i++){
+                outputData[counter]=block[i];
+                counter++;
+            }
+        }
+        return outputData;
+    }
+    /**
+     * 
+     * @param data data
      * @param key key
      * @return encrypt data
      */
     public byte[] encrypt(byte[] data, RC5Key key){
-        byte[] tmp=null;
-        return tmp;
+        List<byte[]> inputBlocks = divisionIntoBlocks(data);
+        List<byte[]> outputBlocks=new ArrayList<>();
+        byte[] tmp;
+        for(byte[] block:inputBlocks){
+            tmp=encryptBlock(block, key);
+            outputBlocks.add(tmp);
+        }
+        byte[] outputData=assemblyOfBlocks(outputBlocks);
+        return outputData;
+        
     }
     /**
      * 
@@ -169,8 +223,17 @@ public class RC5Coder {
      * @return decrypt data
      */
     public byte[] decrypt(byte[] data, RC5Key key){
-        byte[] tmp=null;
-        return tmp;
+         List<byte[]> inputBlocks = divisionIntoBlocks(data);
+        List<byte[]> outputBlocks=new ArrayList<>();
+        byte[] tmp;
+        for(byte[] block:inputBlocks){
+            tmp=decryptBlock(block, key);
+            outputBlocks.add(tmp); 
+        }
+        
+        
+        byte[] outputData=assemblyOfBlocks(outputBlocks);
+        return outputData;
     }
 
 }
