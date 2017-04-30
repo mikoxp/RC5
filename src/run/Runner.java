@@ -24,8 +24,8 @@ public class Runner {
         String key = "asdfghjklzxcvbnm";
         RC5Key rc5key = new RC5Key(r, key.getBytes());
         RC5Coder rC5Coder = new RC5Coder(r);
-        byte[] encryptPart = rC5Coder.encryptPart(text.getBytes(), rc5key);
-        byte[] decryptPart = rC5Coder.decryptPart(encryptPart, rc5key);
+        byte[] encryptPart = rC5Coder.encryptBlock(text.getBytes(), rc5key);
+        byte[] decryptPart = rC5Coder.decryptBlock(encryptPart, rc5key);
         System.out.println(text);
         System.out.println(new String(encryptPart));
         System.out.println(new String(decryptPart));
