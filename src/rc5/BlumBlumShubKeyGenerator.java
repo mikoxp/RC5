@@ -19,7 +19,7 @@ public class BlumBlumShubKeyGenerator {
     private long n;
     private long s;
     private long x[];
-
+    private int numberOfBytes;
     public BlumBlumShubKeyGenerator() {
 
     }
@@ -29,6 +29,7 @@ public class BlumBlumShubKeyGenerator {
      * @return  key
      */
     public byte[] generate(int numberOfBytes) {
+        this.numberOfBytes=numberOfBytes;
         byte[] key;
         int numbersOfBite=numberOfBytes * 8;
         BitSet bitSet = new BitSet(numbersOfBite);
@@ -39,14 +40,12 @@ public class BlumBlumShubKeyGenerator {
         if ((x[0] % 2) == 1) {
             bitSet.set(0);
         }
-        
         for (int j = 1; j < numbersOfBite; j++) {
             x[j] = (x[j - 1] * x[j - 1]) % n;
             if ((x[j] % 2) == 1) {
                 bitSet.set(j);
             }
         }
-        bitSet.set(numbersOfBite-1);
         key = toByteArray(bitSet);
         return key;
     }
@@ -70,7 +69,7 @@ public class BlumBlumShubKeyGenerator {
      * @return
      */
     private byte[] toByteArray(BitSet bits) {
-        byte[] bytes = new byte[bits.length() / 8];
+        byte[] bytes = new byte[numberOfBytes];
         for (int i = 0; i < bits.length(); i++) {
             if (bits.get(i)) {
                 bytes[bytes.length - i / 8 - 1] |= 1 << (i % 8);
