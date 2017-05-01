@@ -34,6 +34,7 @@ public class Runner {
         System.out.println(text);
         System.out.println(new String(encrypt));
         System.out.println(new String(decrypt));
+        RC5Key k=new RC5Key(5, 0);
     }
 
 }

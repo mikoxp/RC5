@@ -36,6 +36,12 @@ public class BlumBlumShubKeyGenerator {
      * @return key
      */
     public byte[] generate(int numberOfBytes) {
+        if (numberOfBytes < 0) {
+            throw new IllegalArgumentException();
+        }
+        if (numberOfBytes == 0) {
+            return null;
+        }
         this.numberOfBytes = numberOfBytes;
         byte[] key;
         int numbersOfBite = numberOfBytes * 8;

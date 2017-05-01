@@ -3,3 +3,4 @@ build.xml
 /Program/dist/
 manifest.mf
 nbproject/
+/dist/

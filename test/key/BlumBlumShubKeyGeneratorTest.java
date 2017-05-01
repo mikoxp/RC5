@@ -5,9 +5,11 @@
  */
 package key;
 
+import exception.BiteOperationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -40,6 +42,24 @@ public class BlumBlumShubKeyGeneratorTest {
             }
             list.add(data);
         }
+    }
+    /**
+     * numberOfBytes Is negative so error and exception
+     */
+    @Test
+    public void generate_numberOfBytesIs0_null(){
+        int number = 0;
+        byte[] data = generator.generate(number);
+        Assert.assertArrayEquals(null, data);
+    }
+    /**
+     * numberOfBytes Is 0 so key isnt exsite
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void generate_numberOfBytesIsNegative_Exception(){
+        int number = -1;
+        byte[] data = generator.generate(number);
+        Assert.assertArrayEquals(null, data);
     }
 
 }
