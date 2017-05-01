@@ -8,7 +8,6 @@ package rc5;
 import exception.BiteOperationException;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,10 +21,14 @@ public class RC5Coder {
 
     //to algorithm
     private final int numberOfRounds;
-    private final int sizeOfPartInBite=32;
-    private final int sizeOfPartInByte = sizeOfPartInBite/8;
+    private final int sizeOfPartInBite = 32;
+    private final int sizeOfPartInByte = sizeOfPartInBite / 8;
     private final BiteOperation biteOperation;
 
+    /**
+     *
+     * @param numberOfRounds number of rounds
+     */
     public RC5Coder(int numberOfRounds) {
         this.numberOfRounds = numberOfRounds;
         biteOperation = new BiteOperation();
@@ -38,22 +41,22 @@ public class RC5Coder {
      */
     private int[] divisionIntoParts(byte[] data) {
         int[] tmp = new int[2];
-        int n=data.length;
-        int nB=n/2;
-        int nA=n-nB;
+        int n = data.length;
+        int nB = n / 2;
+        int nA = n - nB;
         int j;
         byte[] a = new byte[sizeOfPartInByte];
         byte[] b = new byte[sizeOfPartInByte];
         n--;
-        j=sizeOfPartInByte-1;
-        for(int i=0;i<nB;i++){
-            b[j]=data[n];
+        j = sizeOfPartInByte - 1;
+        for (int i = 0; i < nB; i++) {
+            b[j] = data[n];
             n--;
             j--;
         }
-        j=sizeOfPartInByte-1;
-        for(int i=nA-1;i>=0;i--){
-            a[j]=data[n];
+        j = sizeOfPartInByte - 1;
+        for (int i = nA - 1; i >= 0; i--) {
+            a[j] = data[n];
             n--;
             j--;
         }
@@ -76,14 +79,16 @@ public class RC5Coder {
             try {
                 byteA = biteOperation.complementToBlock(sizeOfPartInByte, byteA);
             } catch (BiteOperationException ex) {
-                Logger.getLogger(RC5Coder.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(RC5Coder.class.getName())
+                        .log(Level.SEVERE, null, ex);
             }
         }
         if (byteB.length != sizeOfPartInByte) {
             try {
                 byteB = biteOperation.complementToBlock(sizeOfPartInByte, byteB);
             } catch (BiteOperationException ex) {
-                Logger.getLogger(RC5Coder.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(RC5Coder.class.getName())
+                        .log(Level.SEVERE, null, ex);
             }
         }
         for (int i = 0; i < sizeOfPartInByte; i++) {
@@ -92,6 +97,7 @@ public class RC5Coder {
         }
         return tmp;
     }
+
     /**
      *
      * @param data data
@@ -155,84 +161,87 @@ public class RC5Coder {
         byte[] outputData = assemblingParts(a, b);
         return outputData;
     }
+
     /**
-     * 
+     *
      * @param data data
      * @return list of blocks
      */
-    private List<byte[]> divisionIntoBlocks(byte[] data){
-        int n=data.length;
-        if(n%sizeOfPartInByte!=0){
-            
+    private List<byte[]> divisionIntoBlocks(byte[] data) {
+        int n = data.length;
+        if (n % sizeOfPartInByte != 0) {
+
         }
-        int sizeOfBlock=2*sizeOfPartInByte;
-        int numbersOfBlocks=n/sizeOfBlock;
+        int sizeOfBlock = 2 * sizeOfPartInByte;
+        int numbersOfBlocks = n / sizeOfBlock;
         byte[] tmp;
-        int counter=0;
-        List<byte[]> parts=new ArrayList<>();
-        for(int i=0;i<numbersOfBlocks;i++){
-            tmp=new byte[sizeOfBlock];
-            for(int j=0;j<sizeOfBlock;j++){
-                tmp[j]=data[counter];
+        int counter = 0;
+        List<byte[]> parts = new ArrayList<>();
+        for (int i = 0; i < numbersOfBlocks; i++) {
+            tmp = new byte[sizeOfBlock];
+            for (int j = 0; j < sizeOfBlock; j++) {
+                tmp[j] = data[counter];
                 counter++;
             }
             parts.add(tmp);
         }
         return parts;
     }
+
     /**
-     * 
+     *
      * @param blocks list of blocks
      * @return data
      */
-    private byte[] assemblyOfBlocks(List<byte[]> blocks){
-        int sizeOfBlock=2*sizeOfPartInByte;
-        int n=blocks.size()*sizeOfBlock;
-        byte[] outputData=new byte[n];
-        int counter=0;
+    private byte[] assemblyOfBlocks(List<byte[]> blocks) {
+        int sizeOfBlock = 2 * sizeOfPartInByte;
+        int n = blocks.size() * sizeOfBlock;
+        byte[] outputData = new byte[n];
+        int counter = 0;
         for (byte[] block : blocks) {
-            for(int i=0;i<sizeOfBlock;i++){
-                outputData[counter]=block[i];
+            for (int i = 0; i < sizeOfBlock; i++) {
+                outputData[counter] = block[i];
                 counter++;
             }
         }
         return outputData;
     }
+
     /**
-     * 
+     *
      * @param data data
      * @param key key
      * @return encrypt data
      */
-    public byte[] encrypt(byte[] data, RC5Key key){
+    public byte[] encrypt(byte[] data, RC5Key key) {
         List<byte[]> inputBlocks = divisionIntoBlocks(data);
-        List<byte[]> outputBlocks=new ArrayList<>();
+        List<byte[]> outputBlocks = new ArrayList<>();
         byte[] tmp;
-        for(byte[] block:inputBlocks){
-            tmp=encryptBlock(block, key);
+        for (byte[] block : inputBlocks) {
+            tmp = encryptBlock(block, key);
             outputBlocks.add(tmp);
         }
-        byte[] outputData=assemblyOfBlocks(outputBlocks);
+        byte[] outputData = assemblyOfBlocks(outputBlocks);
         return outputData;
-        
+
     }
+
     /**
-     * 
+     *
      * @param data data
      * @param key key
      * @return decrypt data
      */
-    public byte[] decrypt(byte[] data, RC5Key key){
-         List<byte[]> inputBlocks = divisionIntoBlocks(data);
-        List<byte[]> outputBlocks=new ArrayList<>();
+    public byte[] decrypt(byte[] data, RC5Key key) {
+        List<byte[]> inputBlocks = divisionIntoBlocks(data);
+        List<byte[]> outputBlocks = new ArrayList<>();
         byte[] tmp;
-        for(byte[] block:inputBlocks){
-            tmp=decryptBlock(block, key);
-            outputBlocks.add(tmp); 
+        for (byte[] block : inputBlocks) {
+            tmp = decryptBlock(block, key);
+            outputBlocks.add(tmp);
         }
-        
-        
-        byte[] outputData=assemblyOfBlocks(outputBlocks);
+
+        byte[] outputData = assemblyOfBlocks(outputBlocks);
         return outputData;
     }
 

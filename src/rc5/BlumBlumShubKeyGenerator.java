@@ -20,6 +20,9 @@ public class BlumBlumShubKeyGenerator {
     private long s;
     private long x[];
     private int numberOfBytes;
+    /**
+     * Default constructor
+     */
     public BlumBlumShubKeyGenerator() {
 
     }
