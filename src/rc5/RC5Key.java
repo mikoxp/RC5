@@ -5,6 +5,7 @@
  */
 package rc5;
 
+import key.BlumBlumShubKeyGenerator;
 import rotate.BiteOperation;
 
 /**

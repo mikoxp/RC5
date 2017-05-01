@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rc5;
+package key;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
 
@@ -14,27 +15,30 @@ import java.util.Random;
  * @author moles
  */
 public class BlumBlumShubKeyGenerator {
+
     private long p;
     private long q;
     private long n;
     private long s;
     private long x[];
     private int numberOfBytes;
+
     /**
      * Default constructor
      */
     public BlumBlumShubKeyGenerator() {
 
     }
+
     /**
-     * 
+     *
      * @param numberOfBytes number of bytes
-     * @return  key
+     * @return key
      */
     public byte[] generate(int numberOfBytes) {
-        this.numberOfBytes=numberOfBytes;
+        this.numberOfBytes = numberOfBytes;
         byte[] key;
-        int numbersOfBite=numberOfBytes * 8;
+        int numbersOfBite = numberOfBytes * 8;
         BitSet bitSet = new BitSet(numbersOfBite);
         x = new long[numberOfBytes * 8];
         choosePrimeNumber();
@@ -50,6 +54,9 @@ public class BlumBlumShubKeyGenerator {
             }
         }
         key = toByteArray(bitSet);
+        if (Arrays.equals(key, new byte[numberOfBytes])) {
+            key = generate(numberOfBytes);
+        }
         return key;
     }
 
@@ -63,7 +70,7 @@ public class BlumBlumShubKeyGenerator {
         bigInteger = BigInteger.probablePrime(64, random);
         q = bigInteger.longValue();
         n = p * q;
-        s = Math.abs(random.nextLong() % (n-1)) + 1;
+        s = Math.abs(random.nextLong() % (n - 1)) + 1;
     }
 
     /**

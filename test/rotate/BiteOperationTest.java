@@ -23,6 +23,9 @@ public class BiteOperationTest {
 
     private final BiteOperation biteOperation = new BiteOperation();
 
+    /**
+     * did operation is reversiblility in max value
+     */
     @Test
     public void reversibilityOfRotation_sameNumber_reversibility() {
         BigInteger bigInteger = new BigInteger("abcd".getBytes());
@@ -40,6 +43,9 @@ public class BiteOperationTest {
         Assert.assertEquals(a, b);
     }
 
+    /**
+     * did operation is reversiblility in random value
+     */
     @Test
     public void reversibilityOfRotation_randomNumber_reversibility() {
         BigInteger bigInteger = new BigInteger("abcd".getBytes());
@@ -65,29 +71,45 @@ public class BiteOperationTest {
         }
         Assert.assertEquals(a, b);
     }
-    @Test(expected = BiteOperationException.class) 
+
+    /**
+     * if is null function cant work
+     *
+     * @throws BiteOperationException exception
+     */
+    @Test(expected = BiteOperationException.class)
     public void complementToBlock_dataIsNull_Exception() throws BiteOperationException {
         biteOperation.complementToBlock(5, null);
     }
+
+    /**
+     * standard work
+     */
     @Test
-    public void complementToBlock_complement_complemented(){
-        byte[] mark=new byte[4];
-        mark[2]=15;
-        mark[3]=7;
-        byte[] data=new byte[2];
-        data[0]=15;
-        data[1]=7;
+    public void complementToBlock_complement_complemented() {
+        byte[] mark = new byte[4];
+        mark[2] = 15;
+        mark[3] = 7;
+        byte[] data = new byte[2];
+        data[0] = 15;
+        data[1] = 7;
         try {
-            data=biteOperation.complementToBlock(4, data);
+            data = biteOperation.complementToBlock(4, data);
         } catch (BiteOperationException ex) {
             Logger.getLogger(BiteOperationTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         Assert.assertArrayEquals(mark, data);
     }
-    @Test(expected = BiteOperationException.class) 
-    public void complementToBlock_dataSizeIsBiggerThanSizeBlock_Exception() 
-            throws BiteOperationException{
-        byte[] data=new byte[10];
+
+    /**
+     * bigger array not change smaller and save data
+     *
+     * @throws BiteOperationException
+     */
+    @Test(expected = BiteOperationException.class)
+    public void complementToBlock_dataSizeIsBiggerThanSizeBlock_Exception()
+            throws BiteOperationException {
+        byte[] data = new byte[10];
         biteOperation.complementToBlock(5, data);
     }
 }

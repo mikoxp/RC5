@@ -5,8 +5,10 @@
  */
 package run;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import rc5.BlumBlumShubKeyGenerator;
+import java.util.List;
+import key.BlumBlumShubKeyGenerator;
 import rc5.RC5Coder;
 import rc5.RC5Key;
 
@@ -32,9 +34,6 @@ public class Runner {
         System.out.println(text);
         System.out.println(new String(encrypt));
         System.out.println(new String(decrypt));
-        
-       
-       
     }
 
 }
