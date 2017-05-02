@@ -1,14 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package run;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import key.BlumBlumShubKeyGenerator;
 import rc5.RC5Coder;
 import rc5.RC5Key;
 
