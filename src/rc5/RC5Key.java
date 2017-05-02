@@ -49,6 +49,7 @@ public class RC5Key {
     public RC5Key(int numberOfRounds, int sizeKeyInByte) {
         biteOperation = new BiteOperation();
         this.sizeKeyInByte = sizeKeyInByte;
+        key=generateKey();
         init(numberOfRounds);
     }
     /**
