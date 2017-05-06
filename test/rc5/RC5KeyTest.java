@@ -32,5 +32,31 @@ public class RC5KeyTest {
         int[] words = k.getWords();
         assertNotEquals(null,words);
     }
+   @Test(expected = IllegalArgumentException.class)
+    public void constructor_numberOfRoundsIsNegative_Exception() {
+        RC5Key rC5Key = new RC5Key(-1, "123".getBytes());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_numberOfRoundsIsZero_Exception() {
+        RC5Key rC5Key = new RC5Key(0, "123".getBytes());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_numberOfRoundsIsBiggerTo255_Exception() {
+        RC5Key rC5Key = new RC5Key(256, "123".getBytes());
+    }
+    @Test
+    public void generateKey_nothing(){
+        RC5Key key;
+        for(int i=1;i<=255;i++){
+            key=new RC5Key(255, i);
+        }
+    }
+    @Test(expected = RuntimeException.class)
+    public void generateKey_keyisTooLong_runtimeException(){
+        RC5Key key;
+        key=new RC5Key(5, 255);  
+    }
     
 }
