@@ -33,7 +33,7 @@ public class RC5CoderTest {
     @Test
     public void encryptAndDecrypt_reversibilityOfEncryption_reversiblity() {
         int r = 5;
-        int n=32;
+        int n = 32;
         RC5Key k;
         byte[] encrypt;
         byte[] decrypt;
@@ -74,10 +74,10 @@ public class RC5CoderTest {
         byte[] decrypt = rC5Coder.decrypt(encrypt, k);
         assertArrayEquals(d, decrypt);
     }
-     @Test
+
+    @Test
     public void encryptAndDecrypt_DifficultData3_OK() {
         int r = 5;
-        int keySize = 16;
         RC5Key k = new RC5Key(r, "12345".getBytes());
         RC5Coder rC5Coder = new RC5Coder(r);
         byte[] d = new byte[8];
@@ -86,31 +86,53 @@ public class RC5CoderTest {
         byte[] decrypt = rC5Coder.decrypt(encrypt, k);
         assertArrayEquals(d, decrypt);
     }
-     @Test
+
+    @Test
     public void encryptAndDecrypt_DifficultData4_OK() {
         int r = 5;
         RC5Key k = new RC5Key(r, "12345".getBytes());
         RC5Coder rC5Coder = new RC5Coder(r);
         byte[] d = new byte[8];
-        for(int i=0;i<8;i++){
-            d[i]=127;
+        for (int i = 0; i < 8; i++) {
+            d[i] = 127;
         }
         byte[] encrypt = rC5Coder.encrypt(d, k);
         byte[] decrypt = rC5Coder.decrypt(encrypt, k);
         assertArrayEquals(d, decrypt);
     }
+
     @Test
     public void encryptAndDecrypt_DifficultData5_OK() {
         int r = 5;
-        int keySize = 16;
         RC5Key k = new RC5Key(r, "12345".getBytes());
         RC5Coder rC5Coder = new RC5Coder(r);
         byte[] d = new byte[8];
-        for(int i=0;i<8;i++){
-            d[i]=-128;
+        for (int i = 0; i < 8; i++) {
+            d[i] = -128;
         }
         byte[] encrypt = rC5Coder.encrypt(d, k);
         byte[] decrypt = rC5Coder.decrypt(encrypt, k);
         assertArrayEquals(d, decrypt);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void encrypt_sizeOfDataIsNotMultiply8_Exception() {
+        int r = 5;
+        RC5Key k = new RC5Key(r, "12345".getBytes());
+        RC5Coder rC5Coder = new RC5Coder(r);
+        byte[] data = new byte[9];
+        rC5Coder.encrypt(data, k);
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void decrypt_sizeOfDataIsNotMultiply8_Exception() {
+        int r = 5;
+        RC5Key k = new RC5Key(r, "12345".getBytes());
+        RC5Coder rC5Coder = new RC5Coder(r);
+        byte[] data = new byte[9];
+        rC5Coder.decrypt(data, k);
+
+    }
+
 }

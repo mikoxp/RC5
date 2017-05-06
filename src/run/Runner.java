@@ -14,11 +14,10 @@ public class Runner {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        int r = 10;
-        int[] S = new int[2 * r + 2];
-        String text = "12345678asdfghjk1234abcd";
+        int r = 255;
+        String text = "12345678asdfghjk1234abcdqwertyuq";
         String key = "asdfghjklzxcvbnm";
-        RC5Key genratedKey=new RC5Key(r, 16);
+        RC5Key genratedKey=new RC5Key(r, 49);
         RC5Key rc5key = new RC5Key(r, key.getBytes());
         RC5Coder rC5Coder = new RC5Coder(r);
          byte[] encrypt = rC5Coder.encrypt(text.getBytes(), genratedKey);
@@ -26,7 +25,6 @@ public class Runner {
         System.out.println(text);
         System.out.println(new String(encrypt));
         System.out.println(new String(decrypt));
-        RC5Key k=new RC5Key(5, 0);
     }
 
 }

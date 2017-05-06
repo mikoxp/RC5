@@ -168,10 +168,10 @@ public class RC5Coder {
      */
     private List<byte[]> divisionIntoBlocks(byte[] data) {
         int n = data.length;
-        if (n % sizeOfPartInByte != 0) {
-
-        }
         int sizeOfBlock = 2 * sizeOfPartInByte;
+        if (n % sizeOfBlock != 0) {
+            throw new IllegalArgumentException("Data size must be a multiple of 8");
+        }
         int numbersOfBlocks = n / sizeOfBlock;
         byte[] tmp;
         int counter = 0;
