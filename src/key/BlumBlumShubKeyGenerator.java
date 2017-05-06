@@ -2,6 +2,7 @@
 package key;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
@@ -66,11 +67,13 @@ public class BlumBlumShubKeyGenerator {
      * choose prime number
      */
     private void choosePrimeNumber() {
-        Random random = new Random();
-        BigInteger bigInteger = BigInteger.probablePrime(64, random);
+        SecureRandom random = new SecureRandom();
+        BigInteger bigInteger = BigInteger.probablePrime(128, random);
         p = bigInteger.longValue();
-        bigInteger = BigInteger.probablePrime(64, random);
-        q = bigInteger.longValue();
+        bigInteger = BigInteger.probablePrime(128, random);
+        do{
+            q = bigInteger.longValue();
+        }while(p==q);
         n = p * q;
         s = Math.abs(random.nextLong() % (n - 1)) + 1;
     }

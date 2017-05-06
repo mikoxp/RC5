@@ -26,6 +26,9 @@ public class RC5Coder {
      * @param numberOfRounds number of rounds
      */
     public RC5Coder(int numberOfRounds) {
+        if(numberOfRounds<1|| numberOfRounds>255){
+            throw new IllegalArgumentException("Number of Round must be in (1,255)");
+        }
         this.numberOfRounds = numberOfRounds;
         biteOperation = new BiteOperation();
     }
@@ -100,7 +103,7 @@ public class RC5Coder {
      * @param key key
      * @return encrypted data block
      */
-    public byte[] encryptBlock(byte[] data, RC5Key key) {
+    private byte[] encryptBlock(byte[] data, RC5Key key) {
         int a;
         int b;
         int number;
@@ -132,7 +135,7 @@ public class RC5Coder {
      * @param key key
      * @return decrypted data block
      */
-    public byte[] decryptBlock(byte[] data, RC5Key key) {
+    private byte[] decryptBlock(byte[] data, RC5Key key) {
         int a;
         int b;
         int number;
