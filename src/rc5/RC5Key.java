@@ -1,6 +1,7 @@
 
 package rc5;
 
+import exception.KeyException;
 import key.BlumBlumShubKeyGenerator;
 import rotate.BiteOperation;
 
@@ -26,10 +27,11 @@ public class RC5Key {
      *
      * @param numberOfRounds number of rounds
      * @param key key byte
+     * @throws exception.KeyException key exception
      */
-    public RC5Key(int numberOfRounds, byte[] key) {
+    public RC5Key(int numberOfRounds, byte[] key) throws KeyException {
          if(numberOfRounds<1|| numberOfRounds>255){
-            throw new IllegalArgumentException("Number of Round must be in (1,255)");
+            throw new KeyException("Number of Round must be in (1,255)");
         }
         this.numberOfRounds=numberOfRounds;
         this.key = key;

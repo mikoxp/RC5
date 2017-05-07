@@ -2,6 +2,7 @@
 package run;
 
 import exception.CoderException;
+import exception.KeyException;
 import rc5.RC5Coder;
 import rc5.RC5Key;
 
@@ -13,8 +14,10 @@ public class Runner {
 
     /**
      * @param args the command line arguments
+     * @throws exception.CoderException
+     * @throws exception.KeyException
      */
-    public static void main(String[] args) throws CoderException {
+    public static void main(String[] args) throws CoderException, KeyException {
         int r = 255;
         String text = "12345678asdfghjk1234abcdqwertyuq";
         String key = "asdfghjklzxcvbnm";

@@ -1,6 +1,7 @@
 
 package rc5;
 
+import exception.KeyException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -27,23 +28,23 @@ public class RC5KeyTest {
      * key is null
      */
     @Test
-    public void constructor_keyIsNull_generate_words() {
+    public void constructor_keyIsNull_generate_words() throws KeyException {
         RC5Key k=new RC5Key(5, null);
         int[] words = k.getWords();
         assertNotEquals(null,words);
     }
-   @Test(expected = IllegalArgumentException.class)
-    public void constructor_numberOfRoundsIsNegative_Exception() {
+    @Test(expected = KeyException.class)
+    public void constructor_numberOfRoundsIsNegative_Exception() throws KeyException {
         RC5Key rC5Key = new RC5Key(-1, "123".getBytes());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_numberOfRoundsIsZero_Exception() {
+    @Test(expected = KeyException.class)
+    public void constructor_numberOfRoundsIsZero_Exception() throws KeyException {
         RC5Key rC5Key = new RC5Key(0, "123".getBytes());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_numberOfRoundsIsBiggerTo255_Exception() {
+    @Test(expected = KeyException.class)
+    public void constructor_numberOfRoundsIsBiggerTo255_Exception() throws KeyException {
         RC5Key rC5Key = new RC5Key(256, "123".getBytes());
     }
     @Test

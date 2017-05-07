@@ -1,6 +1,7 @@
 package rc5;
 
 import exception.CoderException;
+import exception.KeyException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class RC5CoderTest {
     }
 
     @Test
-    public void encryptAndDecrypt_DifficultData_OK() throws CoderException {
+    public void encryptAndDecrypt_DifficultData_OK() throws CoderException, KeyException {
         int r = 5;
         RC5Key k = new RC5Key(r, "12345".getBytes());
         RC5Coder rC5Coder = new RC5Coder(r);
@@ -66,7 +67,7 @@ public class RC5CoderTest {
     }
 
     @Test
-    public void encryptAndDecrypt_DifficultData2_OK() throws CoderException {
+    public void encryptAndDecrypt_DifficultData2_OK() throws CoderException, KeyException {
         int r = 5;
         RC5Key k = new RC5Key(r, "12345".getBytes());
         RC5Coder rC5Coder = new RC5Coder(r);
@@ -79,7 +80,7 @@ public class RC5CoderTest {
 
     @Test
     public void encryptAndDecrypt_DifficultData3_OK() 
-            throws CoderException {
+            throws CoderException, KeyException {
         int r = 5;
         RC5Key k = new RC5Key(r, "12345".getBytes());
         RC5Coder rC5Coder = new RC5Coder(r);
@@ -92,7 +93,7 @@ public class RC5CoderTest {
 
     @Test
     public void encryptAndDecrypt_DifficultData4_OK() 
-            throws CoderException {
+            throws CoderException, KeyException {
         int r = 5;
         RC5Key k = new RC5Key(r, "12345".getBytes());
         RC5Coder rC5Coder = new RC5Coder(r);
@@ -107,7 +108,7 @@ public class RC5CoderTest {
 
     @Test
     public void encryptAndDecrypt_DifficultData5_OK() 
-            throws CoderException {
+            throws CoderException, KeyException {
         int r = 5;
         RC5Key k = new RC5Key(r, "12345".getBytes());
         RC5Coder rC5Coder = new RC5Coder(r);
@@ -122,7 +123,7 @@ public class RC5CoderTest {
 
      @Test(expected = CoderException.class)
     public void encrypt_sizeOfDataIsNotMultiply8_Exception() 
-            throws CoderException {
+            throws CoderException, KeyException {
         int r = 5;
         RC5Key k = new RC5Key(r, "12345".getBytes());
         RC5Coder rC5Coder = new RC5Coder(r);
@@ -133,7 +134,7 @@ public class RC5CoderTest {
 
      @Test(expected = CoderException.class)
     public void decrypt_sizeOfDataIsNotMultiply8_Exception() 
-            throws CoderException {
+            throws CoderException, KeyException {
         int r = 5;
         RC5Key k = new RC5Key(r, "12345".getBytes());
         RC5Coder rC5Coder = new RC5Coder(r);
@@ -143,14 +144,14 @@ public class RC5CoderTest {
     }
     @Test(expected = CoderException.class)
     public void encrypt_diffrentNumberOfRoundInKeyAndCoder_Exception() 
-            throws CoderException{
+            throws CoderException, KeyException{
         RC5Key k = new RC5Key(5, "12345".getBytes());
         RC5Coder rC5Coder = new RC5Coder(6);
         rC5Coder.encrypt(new byte[8], k);
     }
     @Test(expected = CoderException.class)
     public void decrypt_diffrentNumberOfRoundInKeyAndCoder_Exception() 
-            throws CoderException{
+            throws CoderException, KeyException{
         RC5Key k = new RC5Key(5, "12345".getBytes());
         RC5Coder rC5Coder = new RC5Coder(6);
         rC5Coder.decrypt(new byte[8], k);
