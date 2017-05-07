@@ -2,6 +2,7 @@
 package rc5;
 
 import exception.BiteOperationException;
+import exception.CoderException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,11 @@ public class RC5Coder {
     /**
      *
      * @param numberOfRounds number of rounds
+     * @throws exception.CoderException coder exception
      */
-    public RC5Coder(int numberOfRounds) {
+    public RC5Coder(int numberOfRounds) throws CoderException {
         if(numberOfRounds<1|| numberOfRounds>255){
-            throw new IllegalArgumentException("Number of Round must be in (1,255)");
+            throw new CoderException("Number of Round must be in (1,255)");
         }
         this.numberOfRounds = numberOfRounds;
         biteOperation = new BiteOperation();
@@ -166,11 +168,11 @@ public class RC5Coder {
      * @param data data
      * @return list of blocks
      */
-    private List<byte[]> divisionIntoBlocks(byte[] data) {
+    private List<byte[]> divisionIntoBlocks(byte[] data) throws CoderException {
         int n = data.length;
         int sizeOfBlock = 2 * sizeOfPartInByte;
         if (n % sizeOfBlock != 0) {
-            throw new IllegalArgumentException("Data size must be a multiple of 8");
+            throw new CoderException("Data size must be a multiple of 8");
         }
         int numbersOfBlocks = n / sizeOfBlock;
         byte[] tmp;
@@ -211,8 +213,12 @@ public class RC5Coder {
      * @param data data
      * @param key key
      * @return encrypt data
+     * @throws exception.CoderException coder exception
      */
-    public byte[] encrypt(byte[] data, RC5Key key) {
+    public byte[] encrypt(byte[] data, RC5Key key) throws CoderException {
+        if(numberOfRounds!=key.getNumberOfRounds()){
+            throw new CoderException("number of rounds in key is diffrent from expected");
+        }
         List<byte[]> inputBlocks = divisionIntoBlocks(data);
         List<byte[]> outputBlocks = new ArrayList<>();
         byte[] tmp;
@@ -230,8 +236,12 @@ public class RC5Coder {
      * @param data data
      * @param key key
      * @return decrypt data
+     * @throws exception.CoderException coder exception
      */
-    public byte[] decrypt(byte[] data, RC5Key key) {
+    public byte[] decrypt(byte[] data, RC5Key key) throws CoderException {
+         if(numberOfRounds!=key.getNumberOfRounds()){
+            throw new CoderException("number of rounds in key is diffrent from expected");
+        }
         List<byte[]> inputBlocks = divisionIntoBlocks(data);
         List<byte[]> outputBlocks = new ArrayList<>();
         byte[] tmp;

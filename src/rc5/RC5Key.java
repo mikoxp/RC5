@@ -16,6 +16,7 @@ public class RC5Key {
     private final int sizeOfWordInByte = sizeOfWordInBits / 8;
     private final int sizeKeyInByte;
     private int numberOfWords;
+    private final int numberOfRounds;
     private int c;
     private byte[] key;
     private int[] words;
@@ -30,6 +31,7 @@ public class RC5Key {
          if(numberOfRounds<1|| numberOfRounds>255){
             throw new IllegalArgumentException("Number of Round must be in (1,255)");
         }
+        this.numberOfRounds=numberOfRounds;
         this.key = key;
         biteOperation = new BiteOperation();
         if (key == null) {
@@ -46,6 +48,7 @@ public class RC5Key {
      * @param sizeKeyInByte size of key
      */
     public RC5Key(int numberOfRounds, int sizeKeyInByte) {
+        this.numberOfRounds=numberOfRounds;
         biteOperation = new BiteOperation();
         this.sizeKeyInByte = sizeKeyInByte;
         key=generateKey();
@@ -130,5 +133,13 @@ public class RC5Key {
     public int[] getWords() {
         return words;
     }
-
+    /**
+     * 
+     * @return number of rounds 
+     */
+    public int getNumberOfRounds() {
+        return numberOfRounds;
+    }
+    
+    
 }
