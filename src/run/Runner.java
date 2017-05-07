@@ -3,6 +3,7 @@ package run;
 
 import exception.CoderException;
 import exception.KeyException;
+import java.util.Arrays;
 import rc5.RC5Coder;
 import rc5.RC5Key;
 
@@ -29,6 +30,18 @@ public class Runner {
         System.out.println(text);
         System.out.println(new String(encrypt));
         System.out.println(new String(decrypt));
+        byte[] t=new byte[8];
+        t[0]=42;
+        t[1]=78;
+        t[2]=-109;
+        t[3]=115;
+        t[4]=84;
+        t[5]=12;
+        t[6]=21;
+        t[7]=-77;
+        byte[] encrypt1 = rC5Coder.encrypt(t, genratedKey);
+        byte[] d = rC5Coder.decrypt(encrypt1, genratedKey);
+        System.out.println(Arrays.equals(d, t));
     }
 
 }

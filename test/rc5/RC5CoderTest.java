@@ -35,8 +35,8 @@ public class RC5CoderTest {
     @Test
     public void encryptAndDecrypt_reversibilityOfEncryption_reversiblity() 
             throws CoderException {
-        int r = 5;
-        int n = 32;
+        int r = 255;
+        int n = 255;
         RC5Key k;
         byte[] encrypt;
         byte[] decrypt;

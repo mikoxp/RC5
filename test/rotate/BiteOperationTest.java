@@ -50,7 +50,7 @@ public class BiteOperationTest {
         int a = bigInteger.intValue();
         int b = a;
         int number = 3;
-        int n = 150;
+        int n = 1000;
         for (int i = 0; i < n; i++) {
             number = random.nextInt() % 32;
             number = Math.abs(number);

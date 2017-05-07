@@ -41,6 +41,9 @@ public class RC5Key {
         } else {
             sizeKeyInByte = key.length;
         }
+        if(sizeKeyInByte> 255){
+            throw new KeyException("Key lenght must be in (0,255)");
+        }
         init(numberOfRounds);
     }
 
