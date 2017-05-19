@@ -98,9 +98,7 @@ public class RC5Key {
         int y = 0;
         words = new int[numberOfWords];
         //------------------------------------
-        int xy;
         for (int i = sizeKeyInByte - 1; i >= 0; i--) {
-            xy=i / sizeOfWordInByte;
             L[i / sizeOfWordInByte] = (L[i / sizeOfWordInByte] << 8) + key[i];
         }
         words[0] = P;
