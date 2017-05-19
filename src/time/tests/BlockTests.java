@@ -64,13 +64,16 @@ public class BlockTests {
     public void timeToEncryptTheNumberOfBlocks() throws FileNotFoundException {
         Date d = new Date();
         long time;
-        String fileName = path+"//number of block " + d.getDate() + "-" + d.getMonth() + " time " + d.getTime() + ".csv";
+        String fileName = path + "//number of block " + d.getDate() + "-" + d.getMonth() + " time " + d.getTime() + ".csv";
         printWriter = new PrintWriter(new File(fileName));
-        int start=(int) Math.pow(10, 4);
-        int end=(int) Math.pow(10, 8);
-        int step=(int) Math.pow(10, 4);
-        for (int i = start; i <=end; i += step) {
+        int start = (int) Math.pow(10, 4);
+        int end = (int) Math.pow(10, 8);
+        int step = (int) Math.pow(10, 4);
+        int counter=step;
+        for (int i = start; i <= end; i += step) {
             time = oneTimeEncrypt(i);
+            counter--;
+            System.out.printf("%d;%d to end %d\n", i, time,counter);
             printWriter.printf("%d;%d\n", i, time);
         }
         printWriter.close();
