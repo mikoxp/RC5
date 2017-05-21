@@ -3,13 +3,8 @@ package run;
 
 import exception.CoderException;
 import exception.KeyException;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import rc5.RC5Coder;
 import rc5.RC5Key;
-import time.tests.BlockTests;
 
 /**
  *

@@ -15,9 +15,9 @@ import org.junit.Test;
  *
  * @author moles
  */
-public class BiteOperationTest {
+public class IntegerBiteOperationTest {
 
-    private final BiteOperation biteOperation = new BiteOperation();
+    private final IntegerBiteOperation biteOperation = new IntegerBiteOperation();
 
     /**
      * did operation is reversiblility in max value
@@ -92,7 +92,7 @@ public class BiteOperationTest {
         try {
             data = biteOperation.complementToBlock(4, data);
         } catch (BiteOperationException ex) {
-            Logger.getLogger(BiteOperationTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IntegerBiteOperationTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         Assert.assertArrayEquals(mark, data);
     }

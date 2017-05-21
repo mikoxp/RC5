@@ -1,4 +1,3 @@
-
 package rc5;
 
 import exception.BiteOperationException;
@@ -8,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import rotate.BiteOperation;
+import rotate.IntegerBiteOperation;
 
 /**
  *
@@ -20,7 +19,7 @@ public class RC5Coder {
     private final int numberOfRounds;
     private final int sizeOfPartInBite = 32;
     private final int sizeOfPartInByte = sizeOfPartInBite / 8;
-    private final BiteOperation biteOperation;
+    private final IntegerBiteOperation biteOperation;
 
     /**
      *
@@ -28,11 +27,11 @@ public class RC5Coder {
      * @throws exception.CoderException coder exception
      */
     public RC5Coder(int numberOfRounds) throws CoderException {
-        if(numberOfRounds<1|| numberOfRounds>255){
+        if (numberOfRounds < 1 || numberOfRounds > 255) {
             throw new CoderException("Number of Round must be in (1,255)");
         }
         this.numberOfRounds = numberOfRounds;
-        biteOperation = new BiteOperation();
+        biteOperation = new IntegerBiteOperation();
     }
 
     /**
@@ -216,7 +215,7 @@ public class RC5Coder {
      * @throws exception.CoderException coder exception
      */
     public byte[] encrypt(byte[] data, RC5Key key) throws CoderException {
-        if(numberOfRounds!=key.getNumberOfRounds()){
+        if (numberOfRounds != key.getNumberOfRounds()) {
             throw new CoderException("number of rounds in key is diffrent from expected");
         }
         List<byte[]> inputBlocks = divisionIntoBlocks(data);
@@ -239,7 +238,7 @@ public class RC5Coder {
      * @throws exception.CoderException coder exception
      */
     public byte[] decrypt(byte[] data, RC5Key key) throws CoderException {
-         if(numberOfRounds!=key.getNumberOfRounds()){
+        if (numberOfRounds != key.getNumberOfRounds()) {
             throw new CoderException("number of rounds in key is diffrent from expected");
         }
         List<byte[]> inputBlocks = divisionIntoBlocks(data);

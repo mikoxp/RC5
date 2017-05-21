@@ -1,15 +1,14 @@
-
 package rc5;
 
 import exception.KeyException;
 import key.BlumBlumShubKeyGenerator;
-import rotate.BiteOperation;
+import rotate.IntegerBiteOperation;
 
 /**
  *
  * @author moles
  */
-public class RC5Key {
+public class RC5Key{
 
     private final int P = 0xb7e15163;
     private final int Q = 0x9e3779b9;
@@ -21,7 +20,7 @@ public class RC5Key {
     private int c;
     private byte[] key;
     private int[] words;
-    private final BiteOperation biteOperation;
+    private final IntegerBiteOperation biteOperation;
 
     /**
      *
@@ -30,18 +29,18 @@ public class RC5Key {
      * @throws exception.KeyException key exception
      */
     public RC5Key(int numberOfRounds, byte[] key) throws KeyException {
-         if(numberOfRounds<1|| numberOfRounds>255){
+        if (numberOfRounds < 1 || numberOfRounds > 255) {
             throw new KeyException("Number of Round must be in (1,255)");
         }
-        this.numberOfRounds=numberOfRounds;
+        this.numberOfRounds = numberOfRounds;
         this.key = key;
-        biteOperation = new BiteOperation();
+        biteOperation = new IntegerBiteOperation();
         if (key == null) {
             sizeKeyInByte = 0;
         } else {
             sizeKeyInByte = key.length;
         }
-        if(sizeKeyInByte> 255){
+        if (sizeKeyInByte > 255) {
             throw new KeyException("Key lenght must be in (0,255)");
         }
         init(numberOfRounds);
@@ -53,15 +52,15 @@ public class RC5Key {
      * @param sizeKeyInByte size of key
      */
     public RC5Key(int numberOfRounds, int sizeKeyInByte) {
-        this.numberOfRounds=numberOfRounds;
-        biteOperation = new BiteOperation();
+        this.numberOfRounds = numberOfRounds;
+        biteOperation = new IntegerBiteOperation();
         this.sizeKeyInByte = sizeKeyInByte;
-        key=generateKey();
+        key = generateKey();
         init(numberOfRounds);
     }
 
     /**
-     * 
+     *
      * @param numberOfRounds number of rounds
      */
     private void init(int numberOfRounds) {
@@ -70,7 +69,7 @@ public class RC5Key {
             c = 1;
         }
         numberOfWords = 2 * (numberOfRounds + 1);
-        if(!(numberOfWords>(sizeKeyInByte-1)/sizeOfWordInByte)){
+        if (!(numberOfWords > (sizeKeyInByte - 1) / sizeOfWordInByte)) {
             throw new RuntimeException("The key is too long for the number of rounds");
         }
         generateWords();
@@ -136,13 +135,13 @@ public class RC5Key {
     public int[] getWords() {
         return words;
     }
+
     /**
-     * 
-     * @return number of rounds 
+     *
+     * @return number of rounds
      */
     public int getNumberOfRounds() {
         return numberOfRounds;
     }
-    
-    
+
 }
