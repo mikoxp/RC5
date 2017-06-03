@@ -12,8 +12,8 @@ public class RC5Key{
 
     private final int P = 0xb7e15163;
     private final int Q = 0x9e3779b9;
-    private final int sizeOfWordInBits = 32;
-    private final int sizeOfWordInByte = sizeOfWordInBits / 8;
+    private final int sizeOfWordInBite = 32;
+    private final int sizeOfWordInByte = sizeOfWordInBite / 8;
     private final int sizeKeyInByte;
     private int numberOfWords;
     private final int numberOfRounds;

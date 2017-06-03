@@ -253,4 +253,137 @@ public class RC5Coder {
         return outputData;
     }
 
+    /**
+     *
+     * @param data data
+     * @param key key
+     * @param numberOfThread
+     * @return encrypt data
+     * @throws exception.CoderException coder exception
+     */
+    public byte[] encrypt(byte[] data, RC5Key key, int numberOfThread) throws CoderException {
+        if (numberOfRounds != key.getNumberOfRounds()) {
+            throw new CoderException("number of rounds in key is diffrent from expected");
+        }
+        List<byte[]> inputBlocks = divisionIntoBlocks(data);
+        EncrytpThread[] t = encryptWithThreadInit(inputBlocks, key, numberOfThread);
+        List<byte[]> outputBlocks = encryptWithThreadMonitor(t, numberOfThread);
+        byte[] outputData = assemblyOfBlocks(outputBlocks);
+        return outputData;
+
+    }
+
+    /**
+     *
+     * @param inputBlocks input blocks
+     * @param key key
+     * @param numberOfThread number of thread
+     * @return encrypted tread object
+     */
+    private EncrytpThread[] encryptWithThreadInit(List<byte[]> inputBlocks, RC5Key key, int numberOfThread) {
+        EncrytpThread[] eThread = new EncrytpThread[numberOfThread];
+        int n = inputBlocks.size() / numberOfThread;
+        int m = inputBlocks.size() - numberOfThread * n;
+        int counter = 0;
+        List<byte[]> tmp = new ArrayList<>();
+        for (int i = 0; i < n + m; i++) {
+            tmp.add(inputBlocks.get(counter));
+            counter++;
+        }
+        eThread[0] = new EncrytpThread(tmp, key);
+        eThread[0].start();
+        for (int i = 1; i < numberOfThread; i++) {
+            tmp = new ArrayList<>();
+            for (int j = 0; j < n; j++) {
+                tmp.add(inputBlocks.get(counter));
+                counter++;
+            }
+            eThread[i] = new EncrytpThread(tmp, key);
+            eThread[i].start();
+        }
+        return eThread;
+    }
+
+    /**
+     *
+     * @param eThread encrypterd thread object
+     * @param numberOfThread number of thread
+     * @return output list
+     */
+    private List<byte[]> encryptWithThreadMonitor(EncrytpThread[] eThread, int numberOfThread) {
+        List<byte[]> outputBlocks = new ArrayList<>();
+        int counter;
+        do {
+            counter = 0;
+            for (EncrytpThread e : eThread) {
+                if (e.isEnd) {
+                    counter++;
+                }
+            }
+        } while (counter != numberOfThread);
+        for (EncrytpThread e : eThread) {
+            outputBlocks.addAll(e.getOutputBlocks());
+        }
+        return outputBlocks;
+    }
+
+    /**
+     *
+     * @param data data
+     * @param key key
+     * @param numberOfThread number of thread
+     * @return decrypt data
+     * @throws exception.CoderException coder exception
+     */
+    public byte[] decrypt(byte[] data, RC5Key key, int numberOfThread) throws CoderException {
+        if (numberOfRounds != key.getNumberOfRounds()) {
+            throw new CoderException("number of rounds in key is diffrent from expected");
+        }
+        List<byte[]> inputBlocks = divisionIntoBlocks(data);
+        List<byte[]> outputBlocks = new ArrayList<>();
+        byte[] tmp;
+        for (byte[] block : inputBlocks) {
+            tmp = decryptBlock(block, key);
+            outputBlocks.add(tmp);
+        }
+
+        byte[] outputData = assemblyOfBlocks(outputBlocks);
+        return outputData;
+    }
+
+    private class EncrytpThread extends Thread {
+
+        private boolean isEnd;
+        private final List<byte[]> inputBlocks;
+        private List<byte[]> outputBlocks;
+        private final IntegerBiteOperation biteOperation;
+        private final RC5Key key;
+
+        public EncrytpThread(List<byte[]> inputBlocks, RC5Key key) {
+            this.inputBlocks = inputBlocks;
+            this.key = key;
+            biteOperation = new IntegerBiteOperation();
+
+        }
+
+        @Override
+        public void run() {
+            isEnd = false;
+            byte[] tmp;
+            outputBlocks = new ArrayList<>();
+            for (byte[] block : inputBlocks) {
+                tmp = encryptBlock(block, key);
+                outputBlocks.add(tmp);
+            }
+            isEnd = true;
+        }
+
+        public boolean IsEnd() {
+            return isEnd;
+        }
+
+        public List<byte[]> getOutputBlocks() {
+            return outputBlocks;
+        }
+    }
 }

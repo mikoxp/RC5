@@ -1,4 +1,3 @@
-
 package run;
 
 import exception.CoderException;
@@ -17,27 +16,17 @@ public class Runner {
      * @throws exception.CoderException
      * @throws exception.KeyException
      */
-    public static void main(String[] args) throws CoderException, KeyException {
-        int r = 255;
-        String text = "12345678asdfghjk1234abcdqwertyuq";
-        String key = "asdfghjklzxcvbnm";
-        RC5Key genratedKey=new RC5Key(r, 49);
-        RC5Key rc5key = new RC5Key(r, key.getBytes());
-        RC5Coder rC5Coder = new RC5Coder(r);
-         byte[] encrypt = rC5Coder.encrypt(text.getBytes(), genratedKey);
-        byte[] decrypt = rC5Coder.decrypt(encrypt, genratedKey);
+    public static void main(String[] args) throws KeyException, CoderException {
+        int numberOfRounds = 255;
+        int sizeOfKey=10;
+        String text = "1234567890abcdef1234567890abcdef";
+        RC5Key rc5key = new RC5Key(numberOfRounds, sizeOfKey);
+        RC5Coder rC5Coder = new RC5Coder(numberOfRounds);
+        byte[] encrypt = rC5Coder.encrypt(text.getBytes(), rc5key,5);
+        byte[] decrypt = rC5Coder.decrypt(encrypt, rc5key);
+        //System.out.println("Key:"+new String(rc5key.getKey()));
         System.out.println(text);
         System.out.println(new String(encrypt));
         System.out.println(new String(decrypt));
-   
-//        BlockTests blockTests=new BlockTests();
-//        try {
-//            blockTests.timeToEncryptTheNumberOfBlocks();
-//        } catch (FileNotFoundException ex) {
-//            Logger.getLogger(Runner.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-       
-        
     }
-
 }
