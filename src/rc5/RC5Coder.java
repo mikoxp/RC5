@@ -12,6 +12,7 @@ import rotate.IntegerBiteOperation;
 /**
  *
  * @author moles
+ * @version 1.1
  */
 public class RC5Coder {
 
@@ -253,11 +254,12 @@ public class RC5Coder {
         return outputData;
     }
 
+    /*---------------------Multi Threads----------------------------------*/
     /**
      *
      * @param data data
      * @param key key
-     * @param numberOfThread
+     * @param numberOfThread number of thread
      * @return encrypt data
      * @throws exception.CoderException coder exception
      */
@@ -266,8 +268,8 @@ public class RC5Coder {
             throw new CoderException("number of rounds in key is diffrent from expected");
         }
         List<byte[]> inputBlocks = divisionIntoBlocks(data);
-        EncrytpThread[] t = encryptWithThreadInit(inputBlocks, key, numberOfThread);
-        List<byte[]> outputBlocks = encryptWithThreadMonitor(t, numberOfThread);
+        EncrytpThread[] eTread = encryptWithThreadInit(inputBlocks, key, numberOfThread);
+        List<byte[]> outputBlocks = encryptWithThreadMonitor(eTread, numberOfThread);
         byte[] outputData = assemblyOfBlocks(outputBlocks);
         return outputData;
 
@@ -278,7 +280,7 @@ public class RC5Coder {
      * @param inputBlocks input blocks
      * @param key key
      * @param numberOfThread number of thread
-     * @return encrypted tread object
+     * @return encrypted treads
      */
     private EncrytpThread[] encryptWithThreadInit(List<byte[]> inputBlocks, RC5Key key, int numberOfThread) {
         EncrytpThread[] eThread = new EncrytpThread[numberOfThread];
@@ -340,32 +342,90 @@ public class RC5Coder {
             throw new CoderException("number of rounds in key is diffrent from expected");
         }
         List<byte[]> inputBlocks = divisionIntoBlocks(data);
-        List<byte[]> outputBlocks = new ArrayList<>();
-        byte[] tmp;
-        for (byte[] block : inputBlocks) {
-            tmp = decryptBlock(block, key);
-            outputBlocks.add(tmp);
-        }
-
+        DecrytpThread[] dThreads = decryptWithThreadInit(inputBlocks, key, numberOfThread);
+        List<byte[]> outputBlocks = decryptWithThreadMonitor(dThreads, numberOfThread);
         byte[] outputData = assemblyOfBlocks(outputBlocks);
         return outputData;
     }
 
+    /**
+     *
+     * @param inputBlocks input block list
+     * @param key key
+     * @param numberOfThread number of thread
+     * @return decrytp threads
+     */
+    private DecrytpThread[] decryptWithThreadInit(List<byte[]> inputBlocks, RC5Key key, int numberOfThread) {
+        DecrytpThread[] dThread = new DecrytpThread[numberOfThread];
+        int n = inputBlocks.size() / numberOfThread;
+        int m = inputBlocks.size() - numberOfThread * n;
+        int counter = 0;
+        List<byte[]> tmp = new ArrayList<>();
+        for (int i = 0; i < n + m; i++) {
+            tmp.add(inputBlocks.get(counter));
+            counter++;
+        }
+        dThread[0] = new DecrytpThread(tmp, key);
+        dThread[0].start();
+        for (int i = 1; i < numberOfThread; i++) {
+            tmp = new ArrayList<>();
+            for (int j = 0; j < n; j++) {
+                tmp.add(inputBlocks.get(counter));
+                counter++;
+            }
+            dThread[i] = new DecrytpThread(tmp, key);
+            dThread[i].start();
+        }
+        return dThread;
+    }
+
+    /**
+     *
+     * @param dThread decrypt thread
+     * @param numberOfThread number of thread
+     * @return output data
+     */
+    private List<byte[]> decryptWithThreadMonitor(DecrytpThread[] dThread, int numberOfThread) {
+        List<byte[]> outputBlocks = new ArrayList<>();
+        int counter;
+        do {
+            counter = 0;
+            for (DecrytpThread d : dThread) {
+                if (d.isEnd) {
+                    counter++;
+                }
+            }
+        } while (counter != numberOfThread);
+        for (DecrytpThread d : dThread) {
+            outputBlocks.addAll(d.getOutputBlocks());
+        }
+        return outputBlocks;
+    }
+
+    /*-------------------------------------------------------------------------*/
+    /**
+     * @author moles
+     */
     private class EncrytpThread extends Thread {
 
         private boolean isEnd;
         private final List<byte[]> inputBlocks;
         private List<byte[]> outputBlocks;
-        private final IntegerBiteOperation biteOperation;
         private final RC5Key key;
 
+        /**
+         *
+         * @param inputBlocks input blocks
+         * @param key key
+         */
         public EncrytpThread(List<byte[]> inputBlocks, RC5Key key) {
             this.inputBlocks = inputBlocks;
             this.key = key;
-            biteOperation = new IntegerBiteOperation();
-
         }
 
+        /**
+         * run
+         */
         @Override
         public void run() {
             isEnd = false;
@@ -378,10 +438,70 @@ public class RC5Coder {
             isEnd = true;
         }
 
+        /**
+         *
+         * @return end status
+         */
         public boolean IsEnd() {
             return isEnd;
         }
 
+        /**
+         *
+         * @return output blocks
+         */
+        public List<byte[]> getOutputBlocks() {
+            return outputBlocks;
+        }
+    }
+
+    /**
+     * @author moles
+     */
+    private class DecrytpThread extends Thread {
+
+        private boolean isEnd;
+        private final List<byte[]> inputBlocks;
+        private List<byte[]> outputBlocks;
+        private final RC5Key key;
+
+        /**
+         *
+         * @param inputBlocks input blocks
+         * @param key key
+         */
+        public DecrytpThread(List<byte[]> inputBlocks, RC5Key key) {
+            this.inputBlocks = inputBlocks;
+            this.key = key;
+        }
+
+        /**
+         * run
+         */
+        @Override
+        public void run() {
+            isEnd = false;
+            byte[] tmp;
+            outputBlocks = new ArrayList<>();
+            for (byte[] block : inputBlocks) {
+                tmp = decryptBlock(block, key);
+                outputBlocks.add(tmp);
+            }
+            isEnd = true;
+        }
+
+        /**
+         *
+         * @return end status
+         */
+        public boolean IsEnd() {
+            return isEnd;
+        }
+
+        /**
+         *
+         * @return output blocks
+         */
         public List<byte[]> getOutputBlocks() {
             return outputBlocks;
         }

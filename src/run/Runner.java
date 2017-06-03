@@ -22,8 +22,8 @@ public class Runner {
         String text = "1234567890abcdef1234567890abcdef";
         RC5Key rc5key = new RC5Key(numberOfRounds, sizeOfKey);
         RC5Coder rC5Coder = new RC5Coder(numberOfRounds);
-        byte[] encrypt = rC5Coder.encrypt(text.getBytes(), rc5key,5);
-        byte[] decrypt = rC5Coder.decrypt(encrypt, rc5key);
+        byte[] encrypt = rC5Coder.encrypt(text.getBytes(), rc5key,3);
+        byte[] decrypt = rC5Coder.decrypt(encrypt, rc5key,3);
         //System.out.println("Key:"+new String(rc5key.getKey()));
         System.out.println(text);
         System.out.println(new String(encrypt));
